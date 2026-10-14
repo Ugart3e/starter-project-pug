@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-class ArticleEntity extends Equatable{
+class ArticleEntity {
   final int ? id;
   final String ? author;
   final String ? title;
@@ -22,8 +20,21 @@ class ArticleEntity extends Equatable{
   });
 
   @override
-  List < Object ? > get props {
-    return [
+  bool operator ==(Object other) {
+    return other is ArticleEntity &&
+        other.id == id &&
+        other.author == author &&
+        other.title == title &&
+        other.description == description &&
+        other.url == url &&
+        other.urlToImage == urlToImage &&
+        other.publishedAt == publishedAt &&
+        other.content == content;
+  }
+
+  @override
+  int get hashCode {
+    return Object.hash(
       id,
       author,
       title,
@@ -32,6 +43,6 @@ class ArticleEntity extends Equatable{
       urlToImage,
       publishedAt,
       content,
-    ];
+    );
   }
 }

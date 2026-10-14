@@ -1,0 +1,30 @@
+import 'package:news_app_clean_architecture/core/resources/data_state.dart';
+import 'package:news_app_clean_architecture/core/usecase/usecase.dart';
+import 'package:news_app_clean_architecture/features/daily_news/domain/entities/article_draft.dart';
+
+class PublishArticleParams {
+  final ArticleDraftEntity draft;
+
+  const PublishArticleParams(this.draft);
+}
+
+/// Uses mock data until the data layer is implemented (README, section 2.1):
+/// a valid draft is "published" after a simulated network delay.
+class PublishArticleUseCase implements UseCase<DataState<void>, PublishArticleParams> {
+  static const Duration defaultSimulatedDelay = Duration(milliseconds: 800);
+
+  final Duration _simulatedDelay;
+
+  PublishArticleUseCase({Duration simulatedDelay = defaultSimulatedDelay})
+      : _simulatedDelay = simulatedDelay;
+
+  @override
+  Future<DataState<void>> call({PublishArticleParams? params}) async {
+    final draft = params!.draft;
+    if (!draft.isReadyToPublish) {
+      return DataFailed(ArticleDraftValidationException(draft.validationErrors));
+    }
+    await Future.delayed(_simulatedDelay);
+    return const DataSuccess(null);
+  }
+}
