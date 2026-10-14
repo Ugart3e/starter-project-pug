@@ -1,5 +1,14 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:news_app_clean_architecture/features/daily_news/data/data_sources/device/gallery_service.dart';
+import 'package:news_app_clean_architecture/features/daily_news/data/repository/article_thumbnail_repository_impl.dart';
+import 'package:news_app_clean_architecture/features/daily_news/domain/repository/article_thumbnail_repository.dart';
+import 'package:news_app_clean_architecture/features/daily_news/domain/use_cases/get_news_feed.dart';
+import 'package:news_app_clean_architecture/features/daily_news/domain/use_cases/get_published_articles.dart';
+import 'package:news_app_clean_architecture/features/daily_news/domain/use_cases/pick_article_thumbnail.dart';
+import 'package:news_app_clean_architecture/features/daily_news/domain/use_cases/publish_article.dart';
+import 'package:news_app_clean_architecture/features/daily_news/presentation/bloc/article/publish/publish_article_cubit.dart';
 import 'package:news_app_clean_architecture/features/daily_news/data/data_sources/remote/news_api_service.dart';
 import 'package:news_app_clean_architecture/features/daily_news/data/repository/article_repository_impl.dart';
 import 'package:news_app_clean_architecture/features/daily_news/domain/repository/article_repository.dart';
@@ -24,8 +33,14 @@ Future<void> initializeDependencies() async {
   // Dependencies
   sl.registerSingleton<NewsApiService>(NewsApiService(sl()));
 
+  sl.registerSingleton<GalleryService>(GalleryService(ImagePicker()));
+
   sl.registerSingleton<ArticleRepository>(
     ArticleRepositoryImpl(sl(),sl())
+  );
+
+  sl.registerSingleton<ArticleThumbnailRepository>(
+    ArticleThumbnailRepositoryImpl(sl())
   );
   
   //UseCases
@@ -45,6 +60,22 @@ Future<void> initializeDependencies() async {
     RemoveArticleUseCase(sl())
   );
 
+  sl.registerSingleton<GetPublishedArticlesUseCase>(
+    GetPublishedArticlesUseCase()
+  );
+
+  sl.registerSingleton<GetNewsFeedUseCase>(
+    GetNewsFeedUseCase(sl(), sl())
+  );
+
+  sl.registerSingleton<PublishArticleUseCase>(
+    PublishArticleUseCase()
+  );
+
+  sl.registerSingleton<PickArticleThumbnailUseCase>(
+    PickArticleThumbnailUseCase(sl())
+  );
+
 
   //Blocs
   sl.registerFactory<RemoteArticlesBloc>(
@@ -53,6 +84,10 @@ Future<void> initializeDependencies() async {
 
   sl.registerFactory<LocalArticleBloc>(
     ()=> LocalArticleBloc(sl(),sl(),sl())
+  );
+
+  sl.registerFactory<PublishArticleCubit>(
+    ()=> PublishArticleCubit(sl(),sl())
   );
 
 

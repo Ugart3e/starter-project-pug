@@ -7,10 +7,10 @@ class GetPublishedArticlesUseCase
     implements UseCase<DataState<List<PublishedArticleEntity>>, void> {
   @override
   Future<DataState<List<PublishedArticleEntity>>> call({void params}) async {
-    return DataSuccess(_mockPublishedArticles());
+    return DataSuccess(_createMockPublishedArticles());
   }
 
-  List<PublishedArticleEntity> _mockPublishedArticles() {
+  List<PublishedArticleEntity> _createMockPublishedArticles() {
     return [
       PublishedArticleEntity(
         title: 'Breaking News!',

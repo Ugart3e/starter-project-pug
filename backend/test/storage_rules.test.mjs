@@ -26,12 +26,12 @@ describe('Storage rules: media/articles', () => {
 
   let uniqueFileCounter = 0;
 
-  function uniqueThumbnailPath(extension = 'jpg') {
+  function createUniqueThumbnailPath(extension = 'jpg') {
     uniqueFileCounter += 1;
     return `media/articles/article${uniqueFileCounter}.${extension}`;
   }
 
-  function thumbnailReference(path) {
+  function getThumbnailReference(path) {
     return ref(storage, path);
   }
 
@@ -42,51 +42,51 @@ describe('Storage rules: media/articles', () => {
   }
 
   it('allows anyone to read a thumbnail', async () => {
-    const path = uniqueThumbnailPath();
+    const path = createUniqueThumbnailPath();
     await seedThumbnail(path);
-    await assertSucceeds(getBytes(thumbnailReference(path)));
+    await assertSucceeds(getBytes(getThumbnailReference(path)));
   });
 
   it('allows uploading a valid thumbnail', async () => {
-    await assertSucceeds(uploadBytes(thumbnailReference(uniqueThumbnailPath()), SMALL_IMAGE, JPEG_METADATA));
+    await assertSucceeds(uploadBytes(getThumbnailReference(createUniqueThumbnailPath()), SMALL_IMAGE, JPEG_METADATA));
   });
 
   it('allows png and webp thumbnails', async () => {
-    await assertSucceeds(uploadBytes(thumbnailReference(uniqueThumbnailPath('png')), SMALL_IMAGE, { contentType: 'image/png' }));
-    await assertSucceeds(uploadBytes(thumbnailReference(uniqueThumbnailPath('webp')), SMALL_IMAGE, { contentType: 'image/webp' }));
+    await assertSucceeds(uploadBytes(getThumbnailReference(createUniqueThumbnailPath('png')), SMALL_IMAGE, { contentType: 'image/png' }));
+    await assertSucceeds(uploadBytes(getThumbnailReference(createUniqueThumbnailPath('webp')), SMALL_IMAGE, { contentType: 'image/webp' }));
   });
 
   it('allows a thumbnail of exactly 5 MB', async () => {
     const image = new Uint8Array(MAX_THUMBNAIL_SIZE_IN_BYTES);
-    await assertSucceeds(uploadBytes(thumbnailReference(uniqueThumbnailPath()), image, JPEG_METADATA));
+    await assertSucceeds(uploadBytes(getThumbnailReference(createUniqueThumbnailPath()), image, JPEG_METADATA));
   });
 
   it('rejects a thumbnail larger than 5 MB', async () => {
     const image = new Uint8Array(MAX_THUMBNAIL_SIZE_IN_BYTES + 1);
-    await assertFails(uploadBytes(thumbnailReference(uniqueThumbnailPath()), image, JPEG_METADATA));
+    await assertFails(uploadBytes(getThumbnailReference(createUniqueThumbnailPath()), image, JPEG_METADATA));
   });
 
   it('rejects a file that is not an image', async () => {
-    await assertFails(uploadBytes(thumbnailReference(uniqueThumbnailPath()), SMALL_IMAGE, { contentType: 'application/pdf' }));
+    await assertFails(uploadBytes(getThumbnailReference(createUniqueThumbnailPath()), SMALL_IMAGE, { contentType: 'application/pdf' }));
   });
 
   it('rejects a file name with an unsupported extension', async () => {
-    await assertFails(uploadBytes(thumbnailReference(uniqueThumbnailPath('gif')), SMALL_IMAGE, { contentType: 'image/gif' }));
+    await assertFails(uploadBytes(getThumbnailReference(createUniqueThumbnailPath('gif')), SMALL_IMAGE, { contentType: 'image/gif' }));
   });
 
   it('rejects uploads outside the media/articles folder', async () => {
-    await assertFails(uploadBytes(thumbnailReference('media/other/article123.jpg'), SMALL_IMAGE, JPEG_METADATA));
+    await assertFails(uploadBytes(getThumbnailReference('media/other/article123.jpg'), SMALL_IMAGE, JPEG_METADATA));
   });
 
   it('rejects overwriting an existing thumbnail', async () => {
-    const path = uniqueThumbnailPath();
+    const path = createUniqueThumbnailPath();
     await seedThumbnail(path);
-    await assertFails(uploadBytes(thumbnailReference(path), SMALL_IMAGE, JPEG_METADATA));
+    await assertFails(uploadBytes(getThumbnailReference(path), SMALL_IMAGE, JPEG_METADATA));
   });
 
   it('rejects deleting a thumbnail', async () => {
-    const path = uniqueThumbnailPath();
+    const path = createUniqueThumbnailPath();
     await seedThumbnail(path);
-    await assertFails(deleteObject(thumbnailReference(path)));
+    await assertFails(deleteObject(getThumbnailReference(path)));
   });
 });
