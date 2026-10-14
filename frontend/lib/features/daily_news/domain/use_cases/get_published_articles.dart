@@ -14,9 +14,9 @@ class GetPublishedArticlesUseCase
     return [
       PublishedArticleEntity(
         title: 'Breaking News!',
-        content: 'This is breaking news! The city council has approved a new park '
-            'in the city centre. Construction will start next spring and the park '
-            'is expected to open to the public within two years.',
+        content: 'This is breaking news!  Arnold Scharwezenegger has been seen with '
+            'a 20 year old male human in the park.\n'
+            'Arnold is 78 years old. will he terminate him?',
         thumbnailUrl: 'https://picsum.photos/seed/symmetry-breaking-news/800/450',
         publishedAt: DateTime.utc(2026, 10, 14, 9, 30),
       ),
