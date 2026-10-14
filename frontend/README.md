@@ -11,6 +11,21 @@ To do this, follow these steps:
 2. Watch this [tutorial to setup Firebase for Flutter](https://youtu.be/Wa0rdbb53I8?list=PL4cUxeGkcC9j--TKIdkb3ISfRbJeJYQwC)
 Once you have completed this appropriately, you can start to work with the project.
 
+### Toolchain requirements (Android)
+The Android build was updated to the minimum versions required by current Flutter releases:
+
+| Tool | Version |
+|---|---|
+| Flutter | 3.47 (stable) |
+| Gradle | 8.14.3 |
+| Android Gradle Plugin | 8.11.1 |
+| Kotlin | 2.2.20 |
+| JDK | 17 or 21 |
+| Android NDK | 27.0.12077973 |
+
+Gradle 8.x cannot run on the JDK 25 bundled with recent Android Studio versions. If the build fails with `Unsupported class file major version 69`, point Flutter to a JDK 17 or 21 installation:
+`flutter config --jdk-dir="<path to JDK 21>"`
+
 ### Generate files for routing, di etc.:
 `flutter pub run build_runner build --delete-conflicting-outputs`
 ### Generate the icons:
