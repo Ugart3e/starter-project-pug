@@ -15,8 +15,15 @@ class PublishedArticleEntity extends ArticleEntity {
           content: content,
           description: describe(content),
           urlToImage: thumbnailUrl,
-          publishedAt: publishedAt.toUtc().toIso8601String(),
+          publishedAt: formatPublicationDate(publishedAt),
         );
+
+  /// Formats the date like the news API does (e.g. `2026-10-14T09:30:00Z`),
+  /// so both kinds of articles are displayed the same way.
+  static String formatPublicationDate(DateTime publishedAt) {
+    final isoDate = publishedAt.toUtc().toIso8601String();
+    return isoDate.replaceFirst(RegExp(r'\.\d+Z$'), 'Z');
+  }
 
   /// Builds the short description shown under the title in the feed:
   /// the beginning of the content, cut at a word boundary.

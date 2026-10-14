@@ -47,22 +47,28 @@ dependencies:
   #chached image 
   cached_network_image: ^3.2.0
   image_picker: ^1.2.3
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
   flutter_lints: ^1.0.0
   retrofit_generator: 3.0.1+1
   floor_generator: 1.2.0
   build_runner: 2.1.2
   mocktail: ^1.0.5
+  image_picker_platform_interface: ^2.11.2
   
 
 flutter:
 
   uses-material-design: true
 
- 
+  assets:
+    - assets/icons/
+
   fonts:
     - family: Muli
       fonts:
@@ -70,4 +76,11 @@ flutter:
         - asset: assets/fonts/muli/Muli-Bold.ttf
           weight: 700
         - asset: assets/fonts/muli/Muli-Light.ttf
+          weight: 300
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/inter/Inter-Regular.ttf
+        - asset: assets/fonts/inter/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/inter/Inter-Light.ttf
           weight: 300
