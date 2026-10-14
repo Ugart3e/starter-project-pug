@@ -15,7 +15,15 @@ void main() {
       expect(article.content, 'Short content.');
       expect(article.description, 'Short content.');
       expect(article.urlToImage, 'https://example.com/thumbnail.jpg');
-      expect(article.publishedAt, '2026-10-14T09:30:00.000Z');
+      expect(article.publishedAt, '2026-10-14T09:30:00Z');
+    });
+  });
+
+  group('PublishedArticleEntity.formatPublicationDate', () {
+    test('formats the date in UTC without fractions of a second', () {
+      final date = DateTime.utc(2026, 10, 14, 9, 30, 15, 123);
+
+      expect(PublishedArticleEntity.formatPublicationDate(date), '2026-10-14T09:30:15Z');
     });
   });
 
