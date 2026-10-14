@@ -32,18 +32,18 @@ void main() {
     getNewsFeed = GetNewsFeedUseCase(getNewsArticles, getPublishedArticles);
   });
 
-  void givenNewsArticles(DataState<List<ArticleEntity>> result) {
+  void stubNewsArticles(DataState<List<ArticleEntity>> result) {
     when(() => getNewsArticles()).thenAnswer((_) async => result);
   }
 
-  void givenPublishedArticles(DataState<List<PublishedArticleEntity>> result) {
+  void stubPublishedArticles(DataState<List<PublishedArticleEntity>> result) {
     when(() => getPublishedArticles()).thenAnswer((_) async => result);
   }
 
   group('GetNewsFeedUseCase', () {
     test('combines both sources sorted from newest to oldest', () async {
-      givenNewsArticles(const DataSuccess([olderNewsArticle, newerNewsArticle]));
-      givenPublishedArticles(DataSuccess([publishedArticle]));
+      stubNewsArticles(const DataSuccess([olderNewsArticle, newerNewsArticle]));
+      stubPublishedArticles(DataSuccess([publishedArticle]));
 
       final feed = await getNewsFeed();
 
@@ -52,8 +52,8 @@ void main() {
     });
 
     test('shows the published articles when the news API fails', () async {
-      givenNewsArticles(DataFailed(networkError));
-      givenPublishedArticles(DataSuccess([publishedArticle]));
+      stubNewsArticles(DataFailed(networkError));
+      stubPublishedArticles(DataSuccess([publishedArticle]));
 
       final feed = await getNewsFeed();
 
@@ -61,8 +61,8 @@ void main() {
     });
 
     test('shows the news articles when the published articles fail', () async {
-      givenNewsArticles(const DataSuccess([newerNewsArticle]));
-      givenPublishedArticles(DataFailed(networkError));
+      stubNewsArticles(const DataSuccess([newerNewsArticle]));
+      stubPublishedArticles(DataFailed(networkError));
 
       final feed = await getNewsFeed();
 
@@ -70,8 +70,8 @@ void main() {
     });
 
     test('fails when both sources fail', () async {
-      givenNewsArticles(DataFailed(networkError));
-      givenPublishedArticles(DataFailed(Exception('Firestore unavailable')));
+      stubNewsArticles(DataFailed(networkError));
+      stubPublishedArticles(DataFailed(Exception('Firestore unavailable')));
 
       final feed = await getNewsFeed();
 
@@ -81,8 +81,8 @@ void main() {
 
     test('places articles without a valid publication date last', () async {
       const undatedArticle = ArticleEntity(title: 'Undated', publishedAt: '');
-      givenNewsArticles(const DataSuccess([undatedArticle, olderNewsArticle]));
-      givenPublishedArticles(const DataSuccess([]));
+      stubNewsArticles(const DataSuccess([undatedArticle, olderNewsArticle]));
+      stubPublishedArticles(const DataSuccess([]));
 
       final feed = await getNewsFeed();
 

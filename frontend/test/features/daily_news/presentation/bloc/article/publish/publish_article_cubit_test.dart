@@ -30,11 +30,11 @@ void main() {
 
   tearDown(() => cubit.close());
 
-  void givenPublicationResult(DataState<void> result) {
+  void stubPublicationResult(DataState<void> result) {
     when(() => publishArticle(params: any(named: 'params'))).thenAnswer((_) async => result);
   }
 
-  void givenPickedThumbnail(DataState<String?> result) {
+  void stubPickedThumbnail(DataState<String?> result) {
     when(() => pickArticleThumbnail()).thenAnswer((_) async => result);
   }
 
@@ -52,7 +52,7 @@ void main() {
     });
 
     test('stores the thumbnail picked from the gallery', () async {
-      givenPickedThumbnail(const DataSuccess(thumbnailPath));
+      stubPickedThumbnail(const DataSuccess(thumbnailPath));
 
       await cubit.pickThumbnail();
 
@@ -60,9 +60,9 @@ void main() {
     });
 
     test('replaces the thumbnail when another one is picked', () async {
-      givenPickedThumbnail(const DataSuccess(thumbnailPath));
+      stubPickedThumbnail(const DataSuccess(thumbnailPath));
       await cubit.pickThumbnail();
-      givenPickedThumbnail(const DataSuccess('/images/another.jpg'));
+      stubPickedThumbnail(const DataSuccess('/images/another.jpg'));
 
       await cubit.pickThumbnail();
 
@@ -70,9 +70,9 @@ void main() {
     });
 
     test('keeps the current thumbnail when the gallery is closed without picking', () async {
-      givenPickedThumbnail(const DataSuccess(thumbnailPath));
+      stubPickedThumbnail(const DataSuccess(thumbnailPath));
       await cubit.pickThumbnail();
-      givenPickedThumbnail(const DataSuccess(null));
+      stubPickedThumbnail(const DataSuccess(null));
 
       await cubit.pickThumbnail();
 
@@ -80,7 +80,7 @@ void main() {
     });
 
     test('reports a failure when the gallery cannot be opened', () async {
-      givenPickedThumbnail(DataFailed(Exception('Gallery unavailable')));
+      stubPickedThumbnail(DataFailed(Exception('Gallery unavailable')));
 
       await cubit.pickThumbnail();
 
@@ -88,7 +88,7 @@ void main() {
     });
 
     test('emits publishing and then published for a valid draft', () async {
-      givenPublicationResult(const DataSuccess(null));
+      stubPublicationResult(const DataSuccess(null));
       cubit.changeTitle('Breaking News!');
 
       final states = expectLater(
@@ -100,8 +100,8 @@ void main() {
     });
 
     test('publishes the draft built from the current state', () async {
-      givenPublicationResult(const DataSuccess(null));
-      givenPickedThumbnail(const DataSuccess(thumbnailPath));
+      stubPublicationResult(const DataSuccess(null));
+      stubPickedThumbnail(const DataSuccess(thumbnailPath));
       cubit.changeTitle('Breaking News!');
       cubit.changeContent('This is breaking news!');
       await cubit.pickThumbnail();
@@ -119,7 +119,7 @@ void main() {
 
     test('exposes the validation errors of an invalid draft', () async {
       const errors = [ArticleDraftError.emptyTitle, ArticleDraftError.missingThumbnail];
-      givenPublicationResult(const DataFailed(ArticleDraftValidationException(errors)));
+      stubPublicationResult(const DataFailed(ArticleDraftValidationException(errors)));
 
       await cubit.publish();
 
@@ -128,7 +128,7 @@ void main() {
     });
 
     test('clears the validation errors when the draft is edited', () async {
-      givenPublicationResult(const DataFailed(ArticleDraftValidationException([ArticleDraftError.emptyTitle])));
+      stubPublicationResult(const DataFailed(ArticleDraftValidationException([ArticleDraftError.emptyTitle])));
       await cubit.publish();
 
       cubit.changeTitle('Breaking News!');
@@ -138,7 +138,7 @@ void main() {
     });
 
     test('reports a failure when the publication fails for another reason', () async {
-      givenPublicationResult(DataFailed(Exception('No connection')));
+      stubPublicationResult(DataFailed(Exception('No connection')));
 
       await cubit.publish();
 
@@ -146,7 +146,7 @@ void main() {
     });
 
     test('ignores a second publication while one is in progress', () async {
-      givenPublicationResult(const DataSuccess(null));
+      stubPublicationResult(const DataSuccess(null));
 
       await Future.wait([cubit.publish(), cubit.publish()]);
 

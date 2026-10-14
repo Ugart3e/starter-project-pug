@@ -13,11 +13,11 @@ class PublishArticleCubit extends Cubit<PublishArticleState> {
       : super(const PublishArticleState());
 
   void changeTitle(String title) {
-    emit(_editingState().copyWith(title: title));
+    emit(_buildEditingState().copyWith(title: title));
   }
 
   void changeContent(String content) {
-    emit(_editingState().copyWith(content: content));
+    emit(_buildEditingState().copyWith(content: content));
   }
 
   Future<void> pickThumbnail() async {
@@ -25,7 +25,7 @@ class PublishArticleCubit extends Cubit<PublishArticleState> {
     if (pickedThumbnail is DataFailed) {
       emit(state.copyWith(status: PublishArticleStatus.failure));
     } else if (pickedThumbnail.data != null) {
-      emit(_editingState().copyWith(thumbnailPath: pickedThumbnail.data));
+      emit(_buildEditingState().copyWith(thumbnailPath: pickedThumbnail.data));
     }
   }
 
@@ -48,7 +48,7 @@ class PublishArticleCubit extends Cubit<PublishArticleState> {
     }
   }
 
-  PublishArticleState _editingState() {
+  PublishArticleState _buildEditingState() {
     return state.copyWith(status: PublishArticleStatus.editing, validationErrors: []);
   }
 }
