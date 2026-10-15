@@ -19,6 +19,19 @@ class ArticleEntity {
     this.content,
   });
 
+  /// Full text shown in the detail of the article. The description is only
+  /// added when it is not already the beginning of the content, as happens
+  /// with the articles published by journalists.
+  String get body {
+    final text = content ?? '';
+    final summary = (description ?? '').replaceFirst(RegExp(r'…$'), '');
+    final singleLineText = text.trim().replaceAll(RegExp(r'\s+'), ' ');
+    if (summary.isEmpty || singleLineText.startsWith(summary)) {
+      return text;
+    }
+    return '$description\n\n$text';
+  }
+
   @override
   bool operator ==(Object other) {
     return other is ArticleEntity &&
