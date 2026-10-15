@@ -30,6 +30,25 @@ void main() {
       expect(article.hashCode, sameArticle.hashCode);
     });
 
+    test('shows the description before the content of a news article', () {
+      const newsArticle = ArticleEntity(description: 'Summary of the news.', content: 'First lines of the story…');
+
+      expect(newsArticle.body, 'Summary of the news.\n\nFirst lines of the story…');
+    });
+
+    test('does not repeat a description that is the beginning of the content', () {
+      const publishedArticle = ArticleEntity(
+        description: 'This is breaking news! Arnold…',
+        content: 'This is breaking news!  Arnold\nhas been seen in the park.',
+      );
+
+      expect(publishedArticle.body, 'This is breaking news!  Arnold\nhas been seen in the park.');
+    });
+
+    test('shows only the content when there is no description', () {
+      expect(const ArticleEntity(content: 'Content').body, 'Content');
+    });
+
     test('is not equal to an article with different values', () {
       expect(article, isNot(const ArticleEntity(id: 2, title: 'Title')));
     });

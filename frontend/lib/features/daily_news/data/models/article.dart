@@ -1,8 +1,6 @@
-import 'package:floor/floor.dart';
 import 'package:news_app_clean_architecture/features/daily_news/domain/entities/article.dart';
 import '../../../../core/constants/constants.dart';
 
-@Entity(tableName: 'article',primaryKeys: ['id'])
 class ArticleModel extends ArticleEntity {
   const ArticleModel({
     int ? id,
@@ -24,7 +22,12 @@ class ArticleModel extends ArticleEntity {
     content: content,
   );
 
+  /// Kept for the generated news API client (news_api_service.g.dart).
   factory ArticleModel.fromJson(Map < String, dynamic > map) {
+    return ArticleModel.fromRawData(map);
+  }
+
+  factory ArticleModel.fromRawData(Map < String, dynamic > map) {
     return ArticleModel(
       author: map['author'] ?? "",
       title: map['title'] ?? "",
@@ -46,6 +49,19 @@ class ArticleModel extends ArticleEntity {
       urlToImage: entity.urlToImage,
       publishedAt: entity.publishedAt,
       content: entity.content
+    );
+  }
+
+  ArticleEntity toEntity() {
+    return ArticleEntity(
+      id: id,
+      author: author,
+      title: title,
+      description: description,
+      url: url,
+      urlToImage: urlToImage,
+      publishedAt: publishedAt,
+      content: content,
     );
   }
 }

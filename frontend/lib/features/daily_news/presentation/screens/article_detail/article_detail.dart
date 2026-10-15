@@ -93,7 +93,7 @@ class ArticleDetailsView extends HookWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 18),
       child: Text(
-        '${article!.description ?? ''}\n\n${article!.content ?? ''}',
+        article!.body,
         style: const TextStyle(fontSize: 16),
       ),
     );

@@ -1,8 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:news_app_clean_architecture/features/daily_news/data/data_sources/device/gallery_service.dart';
+import 'package:news_app_clean_architecture/features/daily_news/data/data_sources/remote/article_thumbnail_storage_service.dart';
+import 'package:news_app_clean_architecture/features/daily_news/data/data_sources/remote/articles_firestore_service.dart';
+import 'package:news_app_clean_architecture/features/daily_news/data/data_sources/remote/news_headlines_service.dart';
+import 'package:news_app_clean_architecture/features/daily_news/data/repository/published_article_repository_impl.dart';
+import 'package:news_app_clean_architecture/features/daily_news/domain/repository/published_article_repository.dart';
 import 'package:news_app_clean_architecture/features/daily_news/data/repository/article_thumbnail_repository_impl.dart';
 import 'package:news_app_clean_architecture/features/daily_news/domain/repository/article_thumbnail_repository.dart';
 import 'package:news_app_clean_architecture/features/daily_news/domain/use_cases/get_news_feed.dart';
@@ -37,7 +44,13 @@ Future<void> initializeDependencies() async {
   // Dependencies
   sl.registerSingleton<NewsApiService>(NewsApiService(sl()));
 
+  sl.registerSingleton<NewsHeadlinesService>(NewsHeadlinesService(sl()));
+
   sl.registerSingleton<GalleryService>(GalleryService(ImagePicker()));
+
+  sl.registerSingleton<ArticlesFirestoreService>(ArticlesFirestoreService(FirebaseFirestore.instance));
+
+  sl.registerSingleton<ArticleThumbnailStorageService>(ArticleThumbnailStorageService(FirebaseStorage.instance));
 
   sl.registerSingleton<ArticleRepository>(
     ArticleRepositoryImpl(sl(),sl())
@@ -45,6 +58,10 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<ArticleThumbnailRepository>(
     ArticleThumbnailRepositoryImpl(sl())
+  );
+
+  sl.registerSingleton<PublishedArticleRepository>(
+    PublishedArticleRepositoryImpl(sl(), sl())
   );
   
   //UseCases
@@ -65,7 +82,7 @@ Future<void> initializeDependencies() async {
   );
 
   sl.registerSingleton<GetPublishedArticlesUseCase>(
-    GetPublishedArticlesUseCase()
+    GetPublishedArticlesUseCase(sl())
   );
 
   sl.registerSingleton<GetNewsFeedUseCase>(
@@ -73,7 +90,7 @@ Future<void> initializeDependencies() async {
   );
 
   sl.registerSingleton<PublishArticleUseCase>(
-    PublishArticleUseCase()
+    PublishArticleUseCase(sl())
   );
 
   sl.registerSingleton<PickArticleThumbnailUseCase>(
