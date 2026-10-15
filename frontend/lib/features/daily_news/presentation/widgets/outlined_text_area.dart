@@ -12,6 +12,7 @@ class OutlinedTextArea extends StatelessWidget {
   final int maxLength;
   final bool hasError;
   final ValueChanged<String> onChanged;
+  final TextEditingController? controller;
 
   const OutlinedTextArea({
     Key? key,
@@ -21,11 +22,13 @@ class OutlinedTextArea extends StatelessWidget {
     required this.maxLength,
     required this.onChanged,
     this.hasError = false,
+    this.controller,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       expands: true,
       maxLines: null,
       maxLength: maxLength,
