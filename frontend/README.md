@@ -30,7 +30,7 @@ On recent Android emulator images (API 36+) the screen may stay black with the I
 
 ### Running the tests
 - Unit and widget tests: `flutter test`
-- Integration test of the "publish an article" journey (needs a running emulator or device): `flutter test integration_test`
+- Integration test of the "publish an article" journey: start the Firebase emulators from `backend/` (`firebase emulators:start --only firestore,storage`), then, with an Android emulator running, `flutter test integration_test`. The journey runs against the emulators with the real security rules, so no test data reaches the Firebase project.
 
 ### Generate files for routing, di etc.:
 `dart run build_runner build --delete-conflicting-outputs`
