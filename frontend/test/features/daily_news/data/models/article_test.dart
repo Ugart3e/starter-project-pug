@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:news_app_clean_architecture/core/constants/constants.dart';
 import 'package:news_app_clean_architecture/features/daily_news/data/models/article.dart';
 import 'package:news_app_clean_architecture/features/daily_news/domain/entities/article.dart';
 
@@ -21,9 +20,9 @@ void main() {
       expect(model.publishedAt, '2026-10-15T09:30:00Z');
     });
 
-    test('uses the default image when the article has none', () {
-      expect(ArticleModel.fromRawData({'urlToImage': ''}).urlToImage, kDefaultImage);
-      expect(ArticleModel.fromRawData({}).urlToImage, kDefaultImage);
+    test('keeps an article without image without inventing one', () {
+      expect(ArticleModel.fromRawData({'urlToImage': null}).urlToImage, isNull);
+      expect(ArticleModel.fromRawData({}).urlToImage, isNull);
     });
 
     test('converts to an entity with the same values', () {

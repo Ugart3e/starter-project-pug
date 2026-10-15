@@ -11,23 +11,23 @@ class AppRoutes {
   static Route onGenerateRoutes(RouteSettings settings) {
     switch (settings.name) {
       case '/':
-        return _materialRoute(const DailyNews());
+        return _buildMaterialRoute(const DailyNews());
 
       case '/ArticleDetails':
-        return _materialRoute(ArticleDetailsView(article: settings.arguments as ArticleEntity));
+        return _buildMaterialRoute(ArticleDetailsView(article: settings.arguments as ArticleEntity));
 
       case '/SavedArticles':
-        return _materialRoute(const SavedArticles());
+        return _buildMaterialRoute(const SavedArticles());
 
       case '/PublishArticle':
-        return _materialRoute(const PublishArticleView());
+        return _buildMaterialRoute(const PublishArticleView());
         
       default:
-        return _materialRoute(const DailyNews());
+        return _buildMaterialRoute(const DailyNews());
     }
   }
 
-  static Route<dynamic> _materialRoute(Widget view) {
+  static Route<dynamic> _buildMaterialRoute(Widget view) {
     return MaterialPageRoute(builder: (_) => view);
   }
 }
