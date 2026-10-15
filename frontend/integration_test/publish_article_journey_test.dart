@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
@@ -34,6 +36,18 @@ const List<int> _onePixelPng = [
   0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82,
 ];
 
+/// The journey runs against the Firebase Local Emulator Suite (started from
+/// `backend/` with `firebase emulators:start --only firestore,storage`), so
+/// the real security rules are exercised and no test data reaches the
+/// production project. `10.0.2.2` is the host machine seen from the Android
+/// emulator.
+const String _emulatorHost = '10.0.2.2';
+
+void connectToFirebaseEmulators() {
+  FirebaseFirestore.instance.useFirestoreEmulator(_emulatorHost, 8080);
+  FirebaseStorage.instance.useStorageEmulator(_emulatorHost, 9199);
+}
+
 Future<String> createTestImage() async {
   final image = File('${Directory.systemTemp.path}/publish_article_journey.png');
   await image.writeAsBytes(_onePixelPng);
@@ -57,13 +71,15 @@ void main() {
   testWidgets('a journalist publishes an article from the home screen', (tester) async {
     ImagePickerPlatform.instance = FakeImagePickerPlatform(await createTestImage());
     await initializeDependencies();
+    connectToFirebaseEmulators();
     await tester.pumpWidget(const MyApp());
 
     await pumpUntilFound(tester, find.byType(AddArticleButton));
     await tester.tap(find.byType(AddArticleButton));
     await pumpUntilFound(tester, find.byType(PublishArticleView));
 
-    await tester.enterText(find.byType(TextField).first, 'Breaking News!');
+    final title = 'Integration test article ${DateTime.now().millisecondsSinceEpoch}';
+    await tester.enterText(find.byType(TextField).first, title);
     await tester.enterText(find.byType(TextField).last, 'This is breaking news!');
     await tester.tap(find.byType(AttachImageButton));
     await pumpUntilFound(tester, find.byType(ArticleThumbnailPreview));
@@ -73,6 +89,7 @@ void main() {
 
     expect(find.byType(PublishArticleView), findsNothing);
     expect(find.byType(DailyNews), findsOneWidget);
+    await pumpUntilFound(tester, find.text(title));
     await sl.reset();
   });
 }
