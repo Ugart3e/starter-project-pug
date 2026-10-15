@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../../../../config/theme/app_design_tokens.dart';
+
 /// Shown instead of the image of an article that has no image or whose image
 /// cannot be loaded. It fills the space given by its parent.
 class ArticleImagePlaceholder extends StatelessWidget {
-  static const Color backgroundColor = Color(0x14000000);
+  static const Color backgroundColor = AppColors.lilac;
 
   const ArticleImagePlaceholder({Key? key}) : super(key: key);
 
@@ -15,7 +17,7 @@ class ArticleImagePlaceholder extends StatelessWidget {
       child: const ColoredBox(
         color: backgroundColor,
         child: Center(
-          child: Icon(Ionicons.newspaperOutline, size: 40, color: Color(0x61000000)),
+          child: Icon(Ionicons.newspaperOutline, size: 40, color: AppColors.darkText),
         ),
       ),
     );
