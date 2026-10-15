@@ -6,6 +6,7 @@ import '../../../../../injection_container.dart';
 import '../../../domain/entities/article.dart';
 import '../../bloc/article/local/local_article_bloc.dart';
 import '../../bloc/article/local/local_article_event.dart';
+import '../../widgets/article_image_placeholder.dart';
 
 class ArticleDetailsView extends HookWidget {
   final ArticleEntity? article;
@@ -80,12 +81,20 @@ class ArticleDetailsView extends HookWidget {
     );
   }
 
+  bool get _hasImage => article!.urlToImage?.isNotEmpty ?? false;
+
   Widget _buildArticleImage() {
     return Container(
       width: double.maxFinite,
       height: 250,
       margin: const EdgeInsets.only(top: 14),
-      child: Image.network(article!.urlToImage!, fit: BoxFit.cover),
+      child: _hasImage
+          ? Image.network(
+              article!.urlToImage!,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const ArticleImagePlaceholder(),
+            )
+          : const ArticleImagePlaceholder(),
     );
   }
 
