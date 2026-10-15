@@ -26,6 +26,12 @@ The Android build was updated to the minimum versions required by current Flutte
 Gradle 8.x cannot run on the JDK 25 bundled with recent Android Studio versions. If the build fails with `Unsupported class file major version 69`, point Flutter to a JDK 17 or 21 installation:
 `flutter config --jdk-dir="<path to JDK 21>"`
 
+On recent Android emulator images (API 36+) the screen may stay black with the Impeller renderer. Run the app with `flutter run --no-enable-impeller` in that case; physical devices are not affected.
+
+### Running the tests
+- Unit and widget tests: `flutter test`
+- Integration test of the "publish an article" journey (needs a running emulator or device): `flutter test integration_test`
+
 ### Generate files for routing, di etc.:
 `flutter pub run build_runner build --delete-conflicting-outputs`
 ### Generate the icons:

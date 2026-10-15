@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app_clean_architecture/features/daily_news/presentation/bloc/article/remote/remote_article_bloc.dart';
+import 'package:news_app_clean_architecture/features/daily_news/presentation/bloc/article/remote/remote_article_event.dart';
 import 'package:news_app_clean_architecture/features/daily_news/presentation/bloc/article/remote/remote_article_state.dart';
 
 import '../../../domain/entities/article.dart';
+import '../../widgets/add_article_button.dart';
 import '../../widgets/article_tile.dart';
 
 class DailyNews extends StatelessWidget {
@@ -69,17 +71,22 @@ class DailyNews extends StatelessWidget {
       body: ListView(
         children: articleWidgets,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: REPLACE ROUTE WITH YOUR "ADD ARTICLE" PAGE
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: AddArticleButton(
+        onPressed: () => _onAddArticlePressed(context),
       ),
     );
   }
 
   void _onArticlePressed(BuildContext context, ArticleEntity article) {
     Navigator.pushNamed(context, '/ArticleDetails', arguments: article);
+  }
+
+  Future<void> _onAddArticlePressed(BuildContext context) async {
+    final remoteArticlesBloc = BlocProvider.of<RemoteArticlesBloc>(context);
+    final isArticlePublished = await Navigator.pushNamed(context, '/PublishArticle');
+    if (isArticlePublished == true) {
+      remoteArticlesBloc.add(const GetArticles());
+    }
   }
 
   void _onShowSavedArticlesViewTapped(BuildContext context) {
