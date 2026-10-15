@@ -1,11 +1,10 @@
-# Runs on every pull request and every push to main, so a change can only be
-# merged when the analysis and all the automated tests pass.
+# Runs on every push and pull request, so a change can only be merged when
+# the analysis and all the automated tests pass.
 name: CI
 
 on:
-  pull_request:
   push:
-    branches: [main]
+  pull_request:
 
 jobs:
   frontend:
