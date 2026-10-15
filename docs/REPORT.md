@@ -115,14 +115,14 @@ On the professional side, I learned to work in small, reviewed steps (one branch
 ## 5. Proof of the Project
 
 ### Video
-[▶ Demo video (1 min 40 s)](report_images/publish_article_demo.mp4), recorded on an Android emulator against the real Firebase project. In order, it shows:
-1. the feed;
+[▶ Demo video (2 min 30 s)](report_images/publish_article_demo.mp4), recorded on an Android emulator against the real Firebase project with the final version of the app. In order, it shows:
+1. the feed, including the placeholder for news without image;
 2. an attempt to publish an empty draft, with its validation messages;
 3. the photos-only gallery;
 4. writing the article;
 5. publishing, with the loading overlay and the confirmation;
-6. the new article on top of the feed;
-7. its detail.
+6. the new article on top of the feed and its detail;
+7. saving it and opening the saved articles.
 
 ### Screenshots
 
@@ -136,6 +136,7 @@ On the professional side, I learned to work in small, reviewed steps (one branch
 | Published articles on top of the feed, read from Firestore and Cloud Storage | ![Feed](report_images/09_real_firebase_feed.png) |
 | Detail of a published article | ![Detail](report_images/10_real_firebase_detail.png) |
 | Placeholder for news without image | ![Placeholder](report_images/12_image_placeholder.png) |
+| A published article saved for later | ![Saved](report_images/13_saved_published_article.png) |
 
 ## 6. Overdelivery
 
