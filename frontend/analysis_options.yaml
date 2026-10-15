@@ -11,6 +11,8 @@ analyzer:
   exclude:
     - build/**
     - android/**
+    # Generated code (floor, retrofit) is not edited by hand.
+    - lib/**/*.g.dart
 include: package:flutter_lints/flutter.yaml
 
 linter:

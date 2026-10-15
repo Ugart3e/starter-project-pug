@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       create: (context) => sl()..add(const GetArticles()),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: theme(),
+          theme: buildAppTheme(),
           onGenerateRoute: AppRoutes.onGenerateRoutes,
           home: const DailyNews()),
     );
