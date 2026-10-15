@@ -15,61 +15,25 @@ class FormattingToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        _FormattingButton(
-          label: 'B',
-          tooltip: 'Bold',
-          labelStyle: const TextStyle(fontWeight: FontWeight.w700),
-          onPressed: onBoldPressed,
-        ),
-        const SizedBox(width: 8),
-        _FormattingButton(
-          label: 'H',
-          tooltip: 'Subheading',
-          labelStyle: const TextStyle(fontWeight: FontWeight.w400),
-          onPressed: onSubheadingPressed,
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Row(
+        children: [
+          _buildButton(Icons.format_bold, 'Bold', onBoldPressed),
+          _buildButton(Icons.title, 'Subheading', onSubheadingPressed),
+        ],
+      ),
     );
   }
-}
 
-class _FormattingButton extends StatelessWidget {
-  final String label;
-  final String tooltip;
-  final TextStyle labelStyle;
-  final VoidCallback onPressed;
-
-  const _FormattingButton({
-    required this.label,
-    required this.tooltip,
-    required this.labelStyle,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Tooltip(
-      message: tooltip,
-      child: Material(
-        color: AppColors.lilac,
-        borderRadius: AppRadius.standard,
-        child: InkWell(
-          borderRadius: AppRadius.standard,
-          onTap: onPressed,
-          child: SizedBox(
-            width: 48,
-            height: 40,
-            child: Center(
-              child: Text(
-                label,
-                style: labelStyle.copyWith(fontFamily: AppFonts.inter, fontSize: 18, color: AppColors.darkText),
-              ),
-            ),
-          ),
-        ),
-      ),
+  Widget _buildButton(IconData icon, String tooltip, VoidCallback onPressed) {
+    return IconButton(
+      icon: Icon(icon),
+      tooltip: tooltip,
+      iconSize: 22,
+      color: AppColors.darkText,
+      visualDensity: VisualDensity.compact,
+      onPressed: onPressed,
     );
   }
 }

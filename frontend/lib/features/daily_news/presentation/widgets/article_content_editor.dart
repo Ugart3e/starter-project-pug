@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../../../config/theme/app_design_tokens.dart';
 import 'formatting_toolbar.dart';
 import 'markdown_formatting.dart';
 import 'outlined_text_area.dart';
 
-/// Box to write the content of an article, with buttons to add bold text
-/// and subheadings. It fills the height given by its parent.
+/// Box to write the content of an article, with a toolbar inside its border
+/// to add bold text and subheadings. It fills the height given by its parent.
 class ArticleContentEditor extends StatefulWidget {
   final String hintText;
   final TextStyle textStyle;
@@ -30,36 +31,62 @@ class ArticleContentEditor extends StatefulWidget {
 
 class _ArticleContentEditorState extends State<ArticleContentEditor> {
   final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(_onFocusChanged);
+  }
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        FormattingToolbar(
-          onBoldPressed: () => _applyFormatting(MarkdownFormatting.applyBold),
-          onSubheadingPressed: () => _applyFormatting(MarkdownFormatting.toggleSubheading),
-        ),
-        const SizedBox(height: 8),
-        Expanded(
-          child: OutlinedTextArea(
-            controller: _controller,
-            hintText: widget.hintText,
-            textStyle: widget.textStyle,
-            hintStyle: widget.hintStyle,
-            maxLength: widget.maxLength,
-            hasError: widget.hasError,
-            onChanged: widget.onChanged,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: AppRadius.standard,
+        border: Border.all(color: _selectBorderColor()),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          FormattingToolbar(
+            onBoldPressed: () => _applyFormatting(MarkdownFormatting.applyBold),
+            onSubheadingPressed: () => _applyFormatting(MarkdownFormatting.toggleSubheading),
           ),
-        ),
-      ],
+          const Divider(height: 1, thickness: 1, color: AppColors.inputBorder),
+          Expanded(
+            child: OutlinedTextArea.borderless(
+              controller: _controller,
+              focusNode: _focusNode,
+              hintText: widget.hintText,
+              textStyle: widget.textStyle,
+              hintStyle: widget.hintStyle,
+              maxLength: widget.maxLength,
+              onChanged: widget.onChanged,
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  /// Same colors as the borders of the other fields of the screen.
+  Color _selectBorderColor() {
+    if (widget.hasError) {
+      return AppColors.error;
+    }
+    return _focusNode.hasFocus ? AppColors.darkText : AppColors.inputBorder;
+  }
+
+  void _onFocusChanged() {
+    setState(() {});
   }
 
   /// Formats the text unless the result would exceed the maximum length.

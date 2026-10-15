@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:news_app_clean_architecture/config/theme/app_design_tokens.dart';
 import 'package:news_app_clean_architecture/features/daily_news/presentation/widgets/article_content_editor.dart';
 
 void main() {
@@ -7,7 +8,14 @@ void main() {
 
   setUp(() => changedContents = []);
 
-  Future<void> pumpEditor(WidgetTester tester, {int maxLength = 5000}) {
+  Color findBorderColor(WidgetTester tester) {
+    final box = tester.widget<DecoratedBox>(
+      find.descendant(of: find.byType(ArticleContentEditor), matching: find.byType(DecoratedBox)).first,
+    );
+    return ((box.decoration as BoxDecoration).border as Border).top.color;
+  }
+
+  Future<void> pumpEditor(WidgetTester tester, {int maxLength = 5000, bool hasError = false}) {
     return tester.pumpWidget(MaterialApp(
       home: Scaffold(
         body: SizedBox(
@@ -18,6 +26,7 @@ void main() {
             hintStyle: const TextStyle(),
             maxLength: maxLength,
             onChanged: changedContents.add,
+            hasError: hasError,
           ),
         ),
       ),
@@ -62,6 +71,22 @@ void main() {
       await tester.pump();
 
       expect(changedContents.last, 'Breaking');
+    });
+
+    testWidgets('draws its border like the other fields', (tester) async {
+      await pumpEditor(tester);
+      expect(findBorderColor(tester), AppColors.inputBorder);
+
+      await tester.tap(find.byType(TextField));
+      await tester.pump();
+
+      expect(findBorderColor(tester), AppColors.darkText);
+    });
+
+    testWidgets('draws its border in the error color when the content is invalid', (tester) async {
+      await pumpEditor(tester, hasError: true);
+
+      expect(findBorderColor(tester), AppColors.error);
     });
   });
 }
