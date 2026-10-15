@@ -50,5 +50,37 @@ void main() {
 
       await expectLater(bloc.stream, emits(RemoteArticlesError(error)));
     });
+
+    test('shows the loading indicator again when retrying after an error', () async {
+      const articles = [ArticleEntity(title: 'Breaking News!')];
+      final error = Exception('No connection');
+      when(() => getNewsFeed()).thenAnswer((_) async => DataFailed(error));
+      bloc.add(const GetArticles());
+      await expectLater(bloc.stream, emits(RemoteArticlesError(error)));
+      when(() => getNewsFeed()).thenAnswer((_) async => const DataSuccess(articles));
+
+      bloc.add(const GetArticles());
+
+      await expectLater(bloc.stream, emitsInOrder([
+        const RemoteArticlesLoading(),
+        const RemoteArticlesDone(articles),
+      ]));
+    });
+
+    test('keeps the current articles while the feed is refreshed', () async {
+      const articles = [ArticleEntity(title: 'Breaking News!')];
+      const newArticles = [ArticleEntity(title: 'Latest news'), ArticleEntity(title: 'Breaking News!')];
+      when(() => getNewsFeed()).thenAnswer((_) async => const DataSuccess(articles));
+      bloc.add(const GetArticles());
+      await expectLater(bloc.stream, emits(const RemoteArticlesDone(articles)));
+      when(() => getNewsFeed()).thenAnswer((_) async => const DataSuccess(newArticles));
+
+      bloc.add(const GetArticles());
+
+      await expectLater(bloc.stream, emitsInOrder([
+        const RemoteArticlesRefreshing(articles),
+        const RemoteArticlesDone(newArticles),
+      ]));
+    });
   });
 }

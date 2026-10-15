@@ -65,6 +65,20 @@ void main() {
       expect(const ArticleEntity(content: 'Content').body, 'Content');
     });
 
+    test('reads its publication date', () {
+      expect(article.publicationDate, DateTime.utc(2026, 10, 14, 9, 30));
+    });
+
+    test('has no publication date when it is missing or invalid', () {
+      expect(const ArticleEntity().publicationDate, isNull);
+      expect(const ArticleEntity(publishedAt: '').publicationDate, isNull);
+      expect(const ArticleEntity(publishedAt: 'yesterday').publicationDate, isNull);
+    });
+
+    test('is not written by a journalist of the app', () {
+      expect(article.isWrittenByJournalist, isFalse);
+    });
+
     test('is not equal to an article with different values', () {
       expect(article, isNot(const ArticleEntity(id: 2, title: 'Title')));
     });

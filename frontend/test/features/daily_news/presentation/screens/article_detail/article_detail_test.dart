@@ -3,12 +3,14 @@ import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:news_app_clean_architecture/features/daily_news/domain/entities/article.dart';
+import 'package:news_app_clean_architecture/features/daily_news/domain/entities/published_article.dart';
 import 'package:news_app_clean_architecture/features/daily_news/domain/use_cases/get_saved_article.dart';
 import 'package:news_app_clean_architecture/features/daily_news/domain/use_cases/remove_article.dart';
 import 'package:news_app_clean_architecture/features/daily_news/domain/use_cases/save_article.dart';
 import 'package:news_app_clean_architecture/features/daily_news/presentation/bloc/article/local/local_article_bloc.dart';
 import 'package:news_app_clean_architecture/features/daily_news/presentation/screens/article_detail/article_detail.dart';
 import 'package:news_app_clean_architecture/features/daily_news/presentation/widgets/article_image_placeholder.dart';
+import 'package:news_app_clean_architecture/features/daily_news/presentation/widgets/journalist_badge.dart';
 import 'package:news_app_clean_architecture/injection_container.dart';
 
 class MockGetSavedArticleUseCase extends Mock implements GetSavedArticleUseCase {}
@@ -79,6 +81,24 @@ void main() {
       await pumpDetail(tester, publishedArticle);
 
       expect(tester.getTopLeft(find.byType(MarkdownBody)).dx, 14);
+    });
+
+    testWidgets('shows an article without publication date', (tester) async {
+      await pumpDetail(tester, const ArticleEntity(title: 'Breaking News!', content: 'Content'));
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Breaking News!'), findsOneWidget);
+    });
+
+    testWidgets('marks an article written by a journalist', (tester) async {
+      await pumpDetail(tester, PublishedArticleEntity(
+        title: 'Breaking News!',
+        content: 'Content',
+        thumbnailUrl: '',
+        publishedAt: DateTime.now(),
+      ));
+
+      expect(find.byType(JournalistBadge), findsOneWidget);
     });
 
     testWidgets('saves the article', (tester) async {

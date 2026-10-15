@@ -22,3 +22,8 @@ class RemoteArticlesDone extends RemoteArticlesState {
 class RemoteArticlesError extends RemoteArticlesState {
   const RemoteArticlesError(Exception error) : super(error: error);
 }
+
+/// The feed is being loaded again while its current articles are still shown.
+class RemoteArticlesRefreshing extends RemoteArticlesState {
+  const RemoteArticlesRefreshing(List<ArticleEntity> articles) : super(articles: articles);
+}

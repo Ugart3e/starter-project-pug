@@ -17,6 +17,17 @@ void main() {
       expect(article.urlToImage, 'https://example.com/thumbnail.jpg');
       expect(article.publishedAt, '2026-10-14T09:30:00Z');
     });
+
+    test('is written by a journalist of the app', () {
+      final article = PublishedArticleEntity(
+        title: 'Breaking News!',
+        content: 'Short content.',
+        thumbnailUrl: 'https://example.com/thumbnail.jpg',
+        publishedAt: DateTime.utc(2026, 10, 14, 9, 30),
+      );
+
+      expect(article.isWrittenByJournalist, isTrue);
+    });
   });
 
   group('PublishedArticleEntity.formatPublicationDate', () {
