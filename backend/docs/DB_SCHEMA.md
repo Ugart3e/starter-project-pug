@@ -82,6 +82,20 @@ The thumbnail is uploaded first so that a document never points to an image that
 - **Updates and deletes are denied**: the app has no editing feature and, without authentication, nobody can prove ownership of an article.
 - **Character limits** (100 for the title, 5000 for the content) follow the design annotation asking for a maximum number of characters. They are enforced both in the app and in the rules.
 
+## Security
+
+The app has no user accounts, so security relies on several layers that do not depend on authentication:
+
+| Layer | Measure |
+|---|---|
+| **Firestore rules** | Only documents that match the schema can be created (exact fields, types, lengths, thumbnail path of the same article, server timestamp). Nothing can be updated or deleted. Every other collection is denied. |
+| **Cloud Storage rules** | Only images (`jpeg`, `png`, `webp`, max 5 MB) can be created, only in `media/articles`, and an existing file cannot be overwritten, updated or deleted. Every other path is denied. |
+| **Rules tests** | 30 automated tests (`backend/test/`) run both rule sets on the Local Emulator Suite. One of them found that thumbnails could be overwritten, which was fixed before deploying. |
+| **API key restriction** | The Firebase configuration files (`lib/firebase_options.dart`, `android/app/google-services.json`) are public by design: they identify the project but grant no access. In addition, the Android API key is restricted in Google Cloud to the app's package name and signing certificate (SHA-1), so it cannot be used from other apps. |
+| **Cost protection** | The project is on the Blaze plan with the bucket in a no-cost region (`US-EAST1`) and a budget alert. |
+
+No secrets (service account keys, admin credentials) are stored in the repository.
+
 ## Known limitations and future improvements
 
 - Without authentication anyone with the app can publish. Adding Firebase Authentication would allow an `authorId` field, ownership-based update/delete rules and per-user rate limiting.

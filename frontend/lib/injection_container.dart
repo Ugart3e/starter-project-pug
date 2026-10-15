@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,10 +20,13 @@ import 'features/daily_news/domain/use_cases/get_saved_article.dart';
 import 'features/daily_news/domain/use_cases/remove_article.dart';
 import 'features/daily_news/domain/use_cases/save_article.dart';
 import 'features/daily_news/presentation/bloc/article/local/local_article_bloc.dart';
+import 'firebase_options.dart';
 
 final sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
   sl.registerSingleton<AppDatabase>(database);
