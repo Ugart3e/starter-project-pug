@@ -75,6 +75,12 @@ void main() {
       expect(find.textContaining('##', findRichText: true), findsNothing);
     });
 
+    testWidgets('aligns a short content to the left', (tester) async {
+      await pumpDetail(tester, publishedArticle);
+
+      expect(tester.getTopLeft(find.byType(MarkdownBody)).dx, 14);
+    });
+
     testWidgets('saves the article', (tester) async {
       await pumpDetail(tester, publishedArticle);
 

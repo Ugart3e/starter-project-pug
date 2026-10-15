@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../../../config/theme/app_design_tokens.dart';
 import 'formatting_toolbar.dart';
+import 'markdown_editing_controller.dart';
 import 'markdown_formatting.dart';
 import 'outlined_text_area.dart';
 
 /// Box to write the content of an article, with a toolbar inside its border
-/// to add bold text and subheadings. It fills the height given by its parent.
+/// to add bold text and subheadings, which are shown formatted while typing. It fills the height given by its parent.
 class ArticleContentEditor extends StatefulWidget {
   final String hintText;
   final TextStyle textStyle;
@@ -30,13 +31,14 @@ class ArticleContentEditor extends StatefulWidget {
 }
 
 class _ArticleContentEditorState extends State<ArticleContentEditor> {
-  final TextEditingController _controller = TextEditingController();
+  final MarkdownEditingController _controller = MarkdownEditingController();
   final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(_onFocusChanged);
+    _focusNode.addListener(_onEditorChanged);
+    _controller.addListener(_onEditorChanged);
   }
 
   @override
@@ -57,7 +59,9 @@ class _ArticleContentEditorState extends State<ArticleContentEditor> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           FormattingToolbar(
-            onBoldPressed: () => _applyFormatting(MarkdownFormatting.applyBold),
+            isBoldActive: MarkdownFormatting.isBold(_controller.value),
+            isSubheadingActive: MarkdownFormatting.isSubheading(_controller.value),
+            onBoldPressed: () => _applyFormatting(MarkdownFormatting.toggleBold),
             onSubheadingPressed: () => _applyFormatting(MarkdownFormatting.toggleSubheading),
           ),
           const Divider(height: 1, thickness: 1, color: AppColors.inputBorder),
@@ -85,7 +89,8 @@ class _ArticleContentEditorState extends State<ArticleContentEditor> {
     return _focusNode.hasFocus ? AppColors.darkText : AppColors.inputBorder;
   }
 
-  void _onFocusChanged() {
+  /// Updates the border and the highlighted buttons.
+  void _onEditorChanged() {
     setState(() {});
   }
 

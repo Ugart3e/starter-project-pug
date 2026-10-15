@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:news_app_clean_architecture/config/theme/app_design_tokens.dart';
 import 'package:news_app_clean_architecture/features/daily_news/presentation/widgets/article_content_editor.dart';
+import 'package:news_app_clean_architecture/features/daily_news/presentation/widgets/formatting_toolbar.dart';
 
 void main() {
   late List<String> changedContents;
 
   setUp(() => changedContents = []);
+
+  FormattingButton findFormattingButton(WidgetTester tester, String tooltip) {
+    return tester.widget<FormattingButton>(
+      find.byWidgetPredicate((widget) => widget is FormattingButton && widget.tooltip == tooltip),
+    );
+  }
 
   Color findBorderColor(WidgetTester tester) {
     final box = tester.widget<DecoratedBox>(
@@ -87,6 +94,28 @@ void main() {
       await pumpEditor(tester, hasError: true);
 
       expect(findBorderColor(tester), AppColors.error);
+    });
+
+    testWidgets('highlights the bold button while the cursor is in bold text', (tester) async {
+      await pumpEditor(tester);
+      await tester.enterText(find.byType(TextField), 'Breaking ');
+      expect(findFormattingButton(tester, 'Bold').isActive, isFalse);
+
+      await tester.tap(find.byTooltip('Bold'));
+      await tester.pump();
+
+      expect(findFormattingButton(tester, 'Bold').isActive, isTrue);
+      expect(findFormattingButton(tester, 'Subheading').isActive, isFalse);
+    });
+
+    testWidgets('highlights the subheading button on a subheading line', (tester) async {
+      await pumpEditor(tester);
+      await tester.enterText(find.byType(TextField), 'Key facts');
+
+      await tester.tap(find.byTooltip('Subheading'));
+      await tester.pump();
+
+      expect(findFormattingButton(tester, 'Subheading').isActive, isTrue);
     });
   });
 }

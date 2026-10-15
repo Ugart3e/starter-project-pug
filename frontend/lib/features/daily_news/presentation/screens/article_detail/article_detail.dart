@@ -41,6 +41,7 @@ class ArticleDetailsView extends HookWidget {
   Widget _buildBody() {
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildArticleTitleAndDate(),
           _buildArticleImage(),
