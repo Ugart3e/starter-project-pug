@@ -3,6 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:news_app_clean_architecture/core/resources/data_state.dart';
 import 'package:news_app_clean_architecture/features/daily_news/data/data_sources/local/DAO/article_dao.dart';
 import 'package:news_app_clean_architecture/features/daily_news/data/data_sources/local/app_database.dart';
+import 'package:news_app_clean_architecture/features/daily_news/data/data_sources/local/saved_article_record.dart';
 import 'package:news_app_clean_architecture/features/daily_news/data/data_sources/remote/news_headlines_service.dart';
 import 'package:news_app_clean_architecture/features/daily_news/data/models/article.dart';
 import 'package:news_app_clean_architecture/features/daily_news/data/repository/article_repository_impl.dart';
@@ -20,7 +21,7 @@ void main() {
   late ArticleRepositoryImpl repository;
 
   setUpAll(() {
-    registerFallbackValue(const ArticleModel());
+    registerFallbackValue(const SavedArticleRecord());
   });
 
   setUp(() {
@@ -53,7 +54,7 @@ void main() {
     });
 
     test('returns the saved articles as entities', () async {
-      when(() => articleDao.getArticles()).thenAnswer((_) async => const [ArticleModel(id: 1, title: 'Saved')]);
+      when(() => articleDao.getArticles()).thenAnswer((_) async => const [SavedArticleRecord(id: 1, title: 'Saved')]);
 
       expect(await repository.getSavedArticles(), const [ArticleEntity(id: 1, title: 'Saved')]);
     });
@@ -66,8 +67,10 @@ void main() {
       await repository.saveArticle(article);
       await repository.removeArticle(article);
 
-      verify(() => articleDao.insertArticle(const ArticleModel(id: 1, title: 'Saved'))).called(1);
-      verify(() => articleDao.deleteArticle(const ArticleModel(id: 1, title: 'Saved'))).called(1);
+      final inserted = verify(() => articleDao.insertArticle(captureAny())).captured.single as SavedArticleRecord;
+      final deleted = verify(() => articleDao.deleteArticle(captureAny())).captured.single as SavedArticleRecord;
+      expect(inserted.toModel(), const ArticleModel(id: 1, title: 'Saved'));
+      expect(deleted.toModel(), const ArticleModel(id: 1, title: 'Saved'));
     });
   });
 }
