@@ -45,6 +45,22 @@ void main() {
       expect(publishedArticle.body, 'This is breaking news!  Arnold\nhas been seen in the park.');
     });
 
+    test('does not repeat the description of formatted content', () {
+      const publishedArticle = ArticleEntity(
+        description: 'Key facts The council approved the park.',
+        content: '## Key facts\nThe council approved the **park**.',
+      );
+
+      expect(publishedArticle.body, '## Key facts\nThe council approved the **park**.');
+    });
+
+    test('converts formatted content to plain text', () {
+      expect(
+        ArticleEntity.convertToPlainText('## Key facts\nThe council approved the **new park**.'),
+        'Key facts The council approved the new park.',
+      );
+    });
+
     test('shows only the content when there is no description', () {
       expect(const ArticleEntity(content: 'Content').body, 'Content');
     });

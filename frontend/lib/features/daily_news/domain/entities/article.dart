@@ -25,11 +25,20 @@ class ArticleEntity {
   String get body {
     final text = content ?? '';
     final summary = (description ?? '').replaceFirst(RegExp(r'…$'), '');
-    final singleLineText = text.trim().replaceAll(RegExp(r'\s+'), ' ');
-    if (summary.isEmpty || singleLineText.startsWith(summary)) {
+    if (summary.isEmpty || convertToPlainText(text).startsWith(summary)) {
       return text;
     }
     return '$description\n\n$text';
+  }
+
+  /// Text of [formattedText] on a single line, without the Markdown marks
+  /// journalists can use: bold (`**`) and subheadings (`#`).
+  static String convertToPlainText(String formattedText) {
+    return formattedText
+        .replaceAll(RegExp(r'^#{1,6}\s+', multiLine: true), '')
+        .replaceAll('**', '')
+        .trim()
+        .replaceAll(RegExp(r'\s+'), ' ');
   }
 
   @override

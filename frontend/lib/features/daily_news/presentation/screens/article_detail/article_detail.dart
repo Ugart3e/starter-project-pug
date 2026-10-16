@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:ionicons/ionicons.dart';
 import '../../../../../injection_container.dart';
 import '../../../domain/entities/article.dart';
@@ -40,6 +41,7 @@ class ArticleDetailsView extends HookWidget {
   Widget _buildBody() {
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildArticleTitleAndDate(),
           _buildArticleImage(),
@@ -101,10 +103,25 @@ class ArticleDetailsView extends HookWidget {
   Widget _buildArticleDescription() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 18),
-      child: Text(
-        article!.body,
-        style: const TextStyle(fontSize: 16),
+      child: Builder(
+        builder: (context) => MarkdownBody(
+          data: article!.body,
+          softLineBreak: true,
+          styleSheet: _buildBodyStyleSheet(context),
+        ),
       ),
+    );
+  }
+
+  /// Articles published by journalists may contain bold text and
+  /// subheadings, written in Markdown.
+  MarkdownStyleSheet _buildBodyStyleSheet(BuildContext context) {
+    const subheadingStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.w900, height: 1.4);
+    return MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+      p: const TextStyle(fontSize: 16),
+      h1: subheadingStyle,
+      h2: subheadingStyle,
+      h3: subheadingStyle,
     );
   }
 

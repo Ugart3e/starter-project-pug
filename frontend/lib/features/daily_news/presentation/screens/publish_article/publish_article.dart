@@ -7,6 +7,7 @@ import '../../../../../injection_container.dart';
 import '../../../domain/entities/article_draft.dart';
 import '../../bloc/article/publish/publish_article_cubit.dart';
 import '../../bloc/article/publish/publish_article_state.dart';
+import '../../widgets/article_content_editor.dart';
 import '../../widgets/article_thumbnail_preview.dart';
 import '../../widgets/attach_image_button.dart';
 import '../../widgets/field_error_text.dart';
@@ -18,7 +19,7 @@ import 'article_draft_error_messages.dart';
 class PublishArticleView extends StatelessWidget {
   static const double horizontalMargin = 26;
   static const double titleBoxHeight = 114;
-  static const double minContentBoxHeight = 200;
+  static const double minContentBoxHeight = 248;
 
   static const List<ArticleDraftError> _titleErrors = [ArticleDraftError.emptyTitle, ArticleDraftError.titleTooLong];
   static const List<ArticleDraftError> _contentErrors = [
@@ -134,7 +135,7 @@ class PublishArticleView extends StatelessWidget {
         Expanded(
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: minContentBoxHeight),
-            child: OutlinedTextArea(
+            child: ArticleContentEditor(
               hintText: 'Add article here, .....',
               textStyle: _contentStyle,
               hintStyle: _contentHintStyle,

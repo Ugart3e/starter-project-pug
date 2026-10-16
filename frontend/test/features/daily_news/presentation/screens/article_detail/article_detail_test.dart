@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:news_app_clean_architecture/features/daily_news/domain/entities/article.dart';
@@ -59,6 +60,25 @@ void main() {
 
       expect(tester.takeException(), isNull);
       expect(find.byType(ArticleImagePlaceholder), findsOneWidget);
+    });
+
+    testWidgets('shows the formatting of the content without its marks', (tester) async {
+      await pumpDetail(tester, const ArticleEntity(
+        title: 'Breaking News!',
+        publishedAt: '2026-10-15T09:30:00Z',
+        content: '## Key facts\nThe council approved the **new park**.',
+      ));
+
+      expect(find.byType(MarkdownBody), findsOneWidget);
+      expect(find.text('Key facts'), findsOneWidget);
+      expect(find.textContaining('**', findRichText: true), findsNothing);
+      expect(find.textContaining('##', findRichText: true), findsNothing);
+    });
+
+    testWidgets('aligns a short content to the left', (tester) async {
+      await pumpDetail(tester, publishedArticle);
+
+      expect(tester.getTopLeft(find.byType(MarkdownBody)).dx, 14);
     });
 
     testWidgets('saves the article', (tester) async {

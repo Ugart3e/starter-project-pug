@@ -28,6 +28,10 @@ void main() {
   });
 
   group('PublishedArticleEntity.describe', () {
+    test('does not show the formatting marks of the content', () {
+      expect(PublishedArticleEntity.describe('## Key facts\nThe **new** park.'), 'Key facts The new park.');
+    });
+
     test('returns a short content unchanged', () {
       expect(PublishedArticleEntity.describe('Short content.'), 'Short content.');
     });

@@ -26,9 +26,9 @@ class PublishedArticleEntity extends ArticleEntity {
   }
 
   /// Builds the short description shown under the title in the feed:
-  /// the beginning of the content, cut at a word boundary.
+  /// the beginning of the content as plain text, cut at a word boundary.
   static String describe(String content) {
-    final singleLineContent = content.trim().replaceAll(RegExp(r'\s+'), ' ');
+    final singleLineContent = ArticleEntity.convertToPlainText(content);
     if (singleLineContent.length <= maxDescriptionLength) {
       return singleLineContent;
     }
