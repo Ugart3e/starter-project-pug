@@ -170,7 +170,12 @@ On the professional side, I learned to work in small, reviewed steps (one branch
   - legacy code generators.
 
 ### 6.2 Prototypes created
-No separate design prototypes were created. The states that the Figma prototype does not draw were designed directly in the app with the style of the prototype (lilac `#E1BEE0`, Inter, 8 px radii):
+- **[Data model of the app](prototypes/DATA_MODEL.md)**: an entity–relationship diagram of every place where articles are kept (Firestore, Cloud Storage, the news API and the local SQLite table) and a diagram of how the feed is built and how an article is published. Its purpose is to let a reviewer understand the backend at a glance, next to the written schema in `backend/docs/DB_SCHEMA.md`.
+- **[Journalists with an account](prototypes/AUTHORS_WITH_LOGIN.md)**: a proposal for the next step of the feature, with Firebase Authentication. It includes the extended data model, a sketch of the security rules (only journalists publish, and only authors edit or delete their articles), the sign-in journey, wireframes, the new Clean Architecture pieces, a test plan and a migration plan. It is a proposal, not implemented.
+
+Both are Markdown files with Mermaid diagrams, so GitHub renders them without installing anything. Other viewers can paste the diagrams into [mermaid.live](https://mermaid.live).
+
+The states that the Figma prototype does not draw were designed directly in the app with the style of the prototype (lilac `#E1BEE0`, Inter, 8 px radii):
 - validation messages;
 - loading overlay;
 - success confirmation;
@@ -182,7 +187,7 @@ No separate design prototypes were created. The states that the Figma prototype 
 The architecture and security diagrams in [section 7](#7-extra-sections) document the design of the feature.
 
 ### 6.3 How can you improve this
-- **Firebase Authentication**: an `authorId` field, editing and deleting your own articles, ownership-based rules.
+- **Firebase Authentication**: an `authorId` field, editing and deleting your own articles, ownership-based rules (see the [prototype](prototypes/AUTHORS_WITH_LOGIN.md)).
 - **A Cloud Functions proxy for the news API**, so that its key never ships inside the app, and **Firebase App Check**, so that only the app can write.
 - **A scheduled Cloud Function** to delete thumbnails that are never referenced by an article.
 - **Pagination** of the feed (it currently reads the 50 newest published articles).
@@ -205,6 +210,11 @@ Each phase was developed on its own branch and merged through a reviewed pull re
 | #7 | Data layer: Firestore and Cloud Storage |
 | #8 | Keep the database package inside the local data source |
 | #9 | Final review: image placeholder, analyzer with no issues |
+| #10 | This report |
+| #11 | Continuous integration with GitHub Actions |
+| #12 | Rich text for articles (Figma annotation #3) |
+| #13 | Feed improvements (Figma annotation #5), lilac placeholder and centered buttons |
+| #14 | Report update: extra features and prototypes |
 
 ### 7.2 Architecture of the publishing feature
 ```mermaid
