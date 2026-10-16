@@ -108,7 +108,6 @@ On the professional side, I learned to work in small, reviewed steps (one branch
 **If I continued the project**, I would:
 - add Firebase Authentication, so that journalists can edit and delete their own articles;
 - add a server-side proxy for the news API and Firebase App Check;
-- support rich text (design annotation #3);
 - paginate the feed;
 - run an accessibility review.
 
@@ -135,7 +134,9 @@ On the professional side, I learned to work in small, reviewed steps (one branch
 | Confirmation after publishing, back on the refreshed feed | ![Published](report_images/07_published_confirmation.png) |
 | Published articles on top of the feed, read from Firestore and Cloud Storage | ![Feed](report_images/09_real_firebase_feed.png) |
 | Detail of a published article | ![Detail](report_images/10_real_firebase_detail.png) |
-| Placeholder for news without image | ![Placeholder](report_images/12_image_placeholder.png) |
+| Lilac placeholder for news without image | ![Placeholder](report_images/12_image_placeholder.png) |
+| Formatted text while writing, with the bold button highlighted (Figma annotation #3) | ![Toolbar](report_images/14_formatting_toolbar.png) |
+| "Journalist" badge and relative dates in the feed (Figma annotation #5) | ![Badges](report_images/15_feed_badges_and_dates.png) |
 
 ## 6. Overdelivery
 
@@ -143,16 +144,19 @@ On the professional side, I learned to work in small, reviewed steps (one branch
 - **Design annotations from the Figma prototype** (suggestions, not requirements):
   - #1 maximum number of characters (title 100, content 5000), enforced in the app and in the security rules;
   - #2 the button opens the gallery with photos only;
+  - #3 rich text: a toolbar inside the content field adds **bold** text and subheadings, which are shown formatted while writing and highlight their button. The content is stored as Markdown, rendered with its format in the detail and shown as plain text in the feed;
   - #4 tapping the image picks another one;
+  - #5 a better feed: dates like "2 hours ago", a "Journalist" badge on the articles written in the app, pull to refresh, and a real "Retry" button when the feed cannot be loaded;
   - #6 clear messages for whatever is missing;
   - #7 confirmation after publishing, and the feed is refreshed;
   - #8 loading overlay while publishing.
 - **A resilient combined feed**: published articles and news API articles, newest first. If one source fails, the other one is still shown.
 - **Security in layers** (see [7.4](#74-security)): schema-enforcing rules for Firestore and Storage, 30 rules tests, an API key restricted to the app, and cost protection.
 - **Tests**:
-  - 101 unit and widget tests;
+  - 161 unit and widget tests;
   - 30 security rules tests;
   - an integration test of the full publishing journey on the Firebase emulators.
+- **Continuous integration with GitHub Actions**: every push and pull request runs `flutter analyze`, the unit and widget tests and the security rules tests on the Firebase emulators. The integration test needs an Android emulator, so it is run locally.
 - **Starter project left better than it was** (Boy Scout rule):
   - it builds with current Flutter;
   - `flutter analyze` reports no issues (it reported 8);
@@ -166,18 +170,25 @@ On the professional side, I learned to work in small, reviewed steps (one branch
   - legacy code generators.
 
 ### 6.2 Prototypes created
-No separate design prototypes were created. The states that the Figma prototype does not draw were designed directly in the app with the style of the prototype (lilac `#E1BEE0`, Inter, 8 px radii):
+- **[Data model of the app](prototypes/DATA_MODEL.md)**: an entity–relationship diagram of every place where articles are kept (Firestore, Cloud Storage, the news API and the local SQLite table) and a diagram of how the feed is built and how an article is published. Its purpose is to let a reviewer understand the backend at a glance, next to the written schema in `backend/docs/DB_SCHEMA.md`.
+- **[Journalists with an account](prototypes/AUTHORS_WITH_LOGIN.md)**: a proposal for the next step of the feature, with Firebase Authentication. It includes the extended data model, a sketch of the security rules (only journalists publish, and only authors edit or delete their articles), the sign-in journey, wireframes, the new Clean Architecture pieces, a test plan and a migration plan. It is a proposal, not implemented.
+
+Both are Markdown files with Mermaid diagrams, so GitHub renders them without installing anything. Other viewers can paste the diagrams into [mermaid.live](https://mermaid.live).
+
+The states that the Figma prototype does not draw were designed directly in the app with the style of the prototype (lilac `#E1BEE0`, Inter, 8 px radii):
 - validation messages;
 - loading overlay;
 - success confirmation;
-- placeholder for articles without image.
+- placeholder for articles without image;
+- the bold and subheading toolbar;
+- the "Journalist" badge;
+- the feed error message with its "Retry" button.
 
 The architecture and security diagrams in [section 7](#7-extra-sections) document the design of the feature.
 
 ### 6.3 How can you improve this
-- **Firebase Authentication**: an `authorId` field, editing and deleting your own articles, ownership-based rules.
+- **Firebase Authentication**: an `authorId` field, editing and deleting your own articles, ownership-based rules (see the [prototype](prototypes/AUTHORS_WITH_LOGIN.md)).
 - **A Cloud Functions proxy for the news API**, so that its key never ships inside the app, and **Firebase App Check**, so that only the app can write.
-- **Rich text** (Markdown) for subheadings and bold text (Figma annotation #3).
 - **A scheduled Cloud Function** to delete thumbnails that are never referenced by an article.
 - **Pagination** of the feed (it currently reads the 50 newest published articles).
 - **Updating the remaining starter dependencies** (Dio 5 and Retrofit 4, Firebase plugins), and adopting `bloc_test`, which can now be installed.
@@ -199,6 +210,11 @@ Each phase was developed on its own branch and merged through a reviewed pull re
 | #7 | Data layer: Firestore and Cloud Storage |
 | #8 | Keep the database package inside the local data source |
 | #9 | Final review: image placeholder, analyzer with no issues |
+| #10 | This report |
+| #11 | Continuous integration with GitHub Actions |
+| #12 | Rich text for articles (Figma annotation #3) |
+| #13 | Feed improvements (Figma annotation #5), lilac placeholder and centered buttons |
+| #14 | Report update: extra features and prototypes |
 
 ### 7.2 Architecture of the publishing feature
 ```mermaid
