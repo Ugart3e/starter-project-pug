@@ -114,14 +114,15 @@ On the professional side, I learned to work in small, reviewed steps (one branch
 ## 5. Proof of the Project
 
 ### Video
-[▶ Demo video (1 min 40 s)](report_images/publish_article_demo.mp4), recorded on an Android emulator against the real Firebase project. In order, it shows:
-1. the feed;
+[▶ Demo video (54 s)](report_images/publish_article_demo.mp4), recorded on an Android emulator against the real Firebase project with the final version of the app. In order, it shows:
+1. the feed, refreshed by pulling down;
 2. an attempt to publish an empty draft, with its validation messages;
-3. the photos-only gallery;
-4. writing the article;
+3. the title and an image from the photos-only gallery;
+4. the content, with a subheading and bold text shown formatted while writing;
 5. publishing, with the loading overlay and the confirmation;
-6. the new article on top of the feed;
-7. its detail.
+6. the new article on top of the feed, with the "Journalist" badge and "Just now";
+7. its detail, with the formatted content;
+8. saving it and opening the saved articles.
 
 ### Screenshots
 
@@ -130,10 +131,11 @@ On the professional side, I learned to work in small, reviewed steps (one branch
 | Publish article, empty draft (Figma "TODO: Publish Article") | ![Empty](report_images/02_publish_empty.png) |
 | Validation messages when publishing an empty draft | ![Errors](report_images/03_publish_validation_errors.png) |
 | Photos-only system gallery | ![Picker](report_images/04_photo_picker.png) |
-| Draft with title, image and content (Figma "Publish Article::DataAdded") | ![Draft](report_images/08_real_firebase_draft.png) |
+| Draft with title, image and formatted content (Figma "Publish Article::DataAdded") | ![Draft](report_images/08_real_firebase_draft.png) |
 | Confirmation after publishing, back on the refreshed feed | ![Published](report_images/07_published_confirmation.png) |
 | Published articles on top of the feed, read from Firestore and Cloud Storage | ![Feed](report_images/09_real_firebase_feed.png) |
-| Detail of a published article | ![Detail](report_images/10_real_firebase_detail.png) |
+| Detail of a published article, with its formatted content | ![Detail](report_images/10_real_firebase_detail.png) |
+| The published article in the saved articles | ![Saved](report_images/13_saved_published_article.png) |
 | Lilac placeholder for news without image | ![Placeholder](report_images/12_image_placeholder.png) |
 | Formatted text while writing, with the bold button highlighted (Figma annotation #3) | ![Toolbar](report_images/14_formatting_toolbar.png) |
 | "Journalist" badge and relative dates in the feed (Figma annotation #5) | ![Badges](report_images/15_feed_badges_and_dates.png) |
@@ -217,6 +219,7 @@ Each phase was developed on its own branch and merged through a reviewed pull re
 | #12 | Rich text for articles (Figma annotation #3) |
 | #13 | Feed improvements (Figma annotation #5), lilac placeholder and centered buttons |
 | #14 | Report update: extra features and prototypes |
+| #15 | Final demo video and scope of the Figma annotations |
 
 ### 7.2 Architecture of the publishing feature
 ```mermaid
