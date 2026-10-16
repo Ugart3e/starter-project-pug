@@ -19,6 +19,13 @@ class ArticleEntity {
     this.content,
   });
 
+  /// Date the article was published, or null when it is unknown.
+  DateTime? get publicationDate => DateTime.tryParse(publishedAt ?? '');
+
+  /// Whether the article was written by a journalist of the app instead of
+  /// coming from the news API.
+  bool get isWrittenByJournalist => false;
+
   /// Full text shown in the detail of the article. The description is only
   /// added when it is not already the beginning of the content, as happens
   /// with the articles published by journalists.

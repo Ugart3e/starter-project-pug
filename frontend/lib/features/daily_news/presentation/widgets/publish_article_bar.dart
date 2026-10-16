@@ -24,7 +24,9 @@ class PublishArticleBar extends StatelessWidget {
           borderRadius: AppRadius.standard,
           onTap: onPressed,
           child: Padding(
-            padding: EdgeInsets.only(top: 24, bottom: 24 + bottomInset),
+            // The bar also covers the system navigation area, so its content
+            // is centered in the whole visible bar.
+            padding: EdgeInsets.symmetric(vertical: 24 + bottomInset / 2),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

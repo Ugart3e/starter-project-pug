@@ -13,7 +13,11 @@ class RemoteArticlesBloc extends Bloc<RemoteArticlesEvent,RemoteArticlesState> {
   }
 
 
-  void onGetArticles(GetArticles event, Emitter < RemoteArticlesState > emit) async {
+  Future<void> onGetArticles(GetArticles event, Emitter < RemoteArticlesState > emit) async {
+    final stateWhileLoading = _buildStateWhileLoading();
+    if (stateWhileLoading != state) {
+      emit(stateWhileLoading);
+    }
     final dataState = await _getNewsFeedUseCase();
 
     if (dataState is DataSuccess) {
@@ -27,6 +31,15 @@ class RemoteArticlesBloc extends Bloc<RemoteArticlesEvent,RemoteArticlesState> {
         RemoteArticlesError(dataState.error!)
       );
     }
+  }
+
+  /// Keeps the current articles on screen while they are loaded again.
+  RemoteArticlesState _buildStateWhileLoading() {
+    final currentArticles = state.articles;
+    if (currentArticles == null) {
+      return const RemoteArticlesLoading();
+    }
+    return RemoteArticlesRefreshing(currentArticles);
   }
 
 }

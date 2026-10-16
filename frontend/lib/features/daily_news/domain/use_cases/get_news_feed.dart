@@ -28,10 +28,10 @@ class GetNewsFeedUseCase implements UseCase<DataState<List<ArticleEntity>>, void
 
   List<ArticleEntity> _sortByNewestFirst(List<ArticleEntity> articles) {
     return List.of(articles)
-      ..sort((first, second) => _parsePublicationDate(second).compareTo(_parsePublicationDate(first)));
+      ..sort((first, second) => _readPublicationDate(second).compareTo(_readPublicationDate(first)));
   }
 
-  DateTime _parsePublicationDate(ArticleEntity article) {
-    return DateTime.tryParse(article.publishedAt ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0);
+  DateTime _readPublicationDate(ArticleEntity article) {
+    return article.publicationDate ?? DateTime.fromMillisecondsSinceEpoch(0);
   }
 }

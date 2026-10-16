@@ -18,6 +18,9 @@ class PublishedArticleEntity extends ArticleEntity {
           publishedAt: formatPublicationDate(publishedAt),
         );
 
+  @override
+  bool get isWrittenByJournalist => true;
+
   /// Formats the date like the news API does (e.g. `2026-10-14T09:30:00Z`),
   /// so both kinds of articles are displayed the same way.
   static String formatPublicationDate(DateTime publishedAt) {

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:news_app_clean_architecture/features/daily_news/domain/entities/article.dart';
 import 'package:news_app_clean_architecture/features/daily_news/presentation/widgets/article_image_placeholder.dart';
 import 'package:news_app_clean_architecture/features/daily_news/presentation/widgets/article_tile.dart';
+import 'package:news_app_clean_architecture/features/daily_news/presentation/widgets/publication_date_text.dart';
 
 void main() {
   Future<void> pumpArticleWidget(WidgetTester tester, ArticleWidget widget) {
@@ -21,7 +22,14 @@ void main() {
 
       expect(find.text('Breaking News!'), findsOneWidget);
       expect(find.text('This is breaking news!'), findsOneWidget);
-      expect(find.text('2026-10-15T09:30:00Z'), findsOneWidget);
+      expect(find.byType(PublicationDateText), findsOneWidget);
+    });
+
+    testWidgets('shows an article without publication date', (tester) async {
+      await pumpArticleWidget(tester, const ArticleWidget(article: ArticleEntity(title: 'Breaking News!')));
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Breaking News!'), findsOneWidget);
     });
 
     testWidgets('shows a placeholder for an article without image', (tester) async {

@@ -7,6 +7,7 @@ import '../../../../../injection_container.dart';
 import '../../../domain/entities/article.dart';
 import '../../bloc/article/local/local_article_bloc.dart';
 import '../../bloc/article/local/local_article_event.dart';
+import '../../widgets/article_byline.dart';
 import '../../widgets/article_image_placeholder.dart';
 
 class ArticleDetailsView extends HookWidget {
@@ -67,17 +68,7 @@ class ArticleDetailsView extends HookWidget {
           ),
 
           const SizedBox(height: 14),
-          // DateTime
-          Row(
-            children: [
-              const Icon(Ionicons.timeOutline, size: 16),
-              const SizedBox(width: 4),
-              Text(
-                article!.publishedAt!,
-                style: const TextStyle(fontSize: 12),
-              ),
-            ],
-          ),
+          ArticleByline(article: article!, dateIcon: Ionicons.timeOutline),
         ],
       ),
     );

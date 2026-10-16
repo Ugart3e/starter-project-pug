@@ -26,17 +26,10 @@ class AddArticleButton extends StatelessWidget {
           child: InkWell(
             borderRadius: AppRadius.standard,
             onTap: onPressed,
+            // An icon instead of the "+" character of the font, whose glyph
+            // sits below the center of its line.
             child: const Center(
-              child: Text(
-                '+',
-                style: TextStyle(
-                  fontFamily: AppFonts.inter,
-                  fontSize: 40,
-                  fontWeight: FontWeight.w300,
-                  height: 1,
-                  color: Colors.black,
-                ),
-              ),
+              child: Icon(Icons.add, size: 30, color: Colors.black),
             ),
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../domain/entities/article.dart';
+import 'article_byline.dart';
 import 'article_image_placeholder.dart';
 
 class ArticleWidget extends StatelessWidget {
@@ -104,19 +105,7 @@ class ArticleWidget extends StatelessWidget {
               ),
             ),
 
-            // Datetime
-            Row(
-              children: [
-                const Icon(Icons.timeline_outlined, size: 16),
-                const SizedBox(width: 4),
-                Text(
-                  article!.publishedAt!,
-                  style: const TextStyle(
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
+            ArticleByline(article: article!, dateIcon: Icons.timeline_outlined),
           ],
         ),
       ),
