@@ -141,7 +141,9 @@ On the professional side, I learned to work in small, reviewed steps (one branch
 ## 6. Overdelivery
 
 ### 6.1 New features implemented
-- **Design annotations from the Figma prototype** (suggestions, not requirements):
+The repository documentation defines what was required: publishing an article with a title, a thumbnail and content, stored in Firestore and Cloud Storage and following the architecture and coding guidelines. The Figma prototype also contains eight numbered annotations with ideas to improve the feature. They are not part of the documented requirements, so I did not treat them as mandatory. I treated them as improvements proposed by the design itself and implemented them as extra work on top of the required feature.
+
+- **Design annotations from the Figma prototype** (optional improvements, done as extra work):
   - #1 maximum number of characters (title 100, content 5000), enforced in the app and in the security rules;
   - #2 the button opens the gallery with photos only;
   - #3 rich text: a toolbar inside the content field adds **bold** text and subheadings, which are shown formatted while writing and highlight their button. The content is stored as Markdown, rendered with its format in the detail and shown as plain text in the feed;
